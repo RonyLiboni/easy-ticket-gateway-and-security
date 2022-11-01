@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8080
 
 eureka:
   client:
@@ -13,10 +13,31 @@ spring:
 
   cloud:
     gateway:
+      routes:
+       - id: core-business-ms-service
+         uri: lb://core-business-ms
+         predicates: 
+           - Path=/v1/**
+         filters:
+           - RewritePath=/v1/(?<path>.*), /$\{path}
+       - id: security-ms-service
+         uri: lb://security-ms
+         predicates: 
+           - Path=/v1/**
+         filters:
+           - RewritePath=/v1/(?<path>.*), /$\{path}
+       - id: openapi
+         uri: http://localhost:${server.port}
+         predicates: 
+           - Path=/v3/api-docs/**
+         filters:
+           - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs/
+                 
       discovery:
         locator:
           enabled: true
-          lower-case-service-id: true
-
+          lower-case-service-id: true    
+     
   main:
     web-application-type: reactive
+    
