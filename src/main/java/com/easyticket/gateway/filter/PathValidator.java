@@ -7,26 +7,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Component
-@ConfigurationProperties("endpoints")
+@ConfigurationProperties("validator")
 @Getter
 @Setter
-public class RouteValidator {
+public class PathValidator {
 	
-	private List<SecuredRoute> securedRoutes = List.of(new SecuredRoute("/admin/", "ROLE_ADMIN"), 
-														new SecuredRoute("/user/", "ROLE_USER"));
+	private List<SecuredPath> securedPaths = List.of(new SecuredPath("/admin/", "ROLE_ADMIN"), 
+														new SecuredPath("/user/", "ROLE_USER"));
 	
-	private List<String> permitAllRoutes = List.of("/swagger-ui/", 
+	private List<String> permitAllPaths = List.of("/swagger-ui/", 
 										    		"/v3/api-docs/",
 										    		"/all/");
         
 	public boolean isUserPermissionInvalid(String path, String userRoles) {
-		return securedRoutes.stream()
-							.filter(route -> path.contains(route.getSecuredRoute()))
+		return securedPaths.stream()
+							.filter(route -> path.contains(route.getSecuredPath()))
 							.noneMatch(route -> userRoles.contains(route.getRequiredRole()));
 	}
 	
-	public boolean isASecuredRoute(String path) {
-		return permitAllRoutes.stream()
+	public boolean isASecuredPath(String path) {
+		return permitAllPaths.stream()
 							.noneMatch(permitedRoute -> path.contains(permitedRoute));
 	}
 }

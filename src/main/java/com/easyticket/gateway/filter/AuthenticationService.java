@@ -10,17 +10,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-	private final RouteValidator routeValidator;
+	private final PathValidator pathValidator;
 	private final JwtTokenService jwtTokenService;
 	
 	public ServerWebExchange authenticate(ServerWebExchange exchange) {
 		var request = exchange.getRequest();
 		var path = request.getURI().getPath();
 		
-		if (routeValidator.isASecuredRoute(path)) {
+		if (pathValidator.isASecuredPath(path)) {
 			final String token = jwtTokenService.getTokenOrThrowUnauthorizedException(request);
 						
-			if (routeValidator.isUserPermissionInvalid(path, jwtTokenService.getRolesFrom(token))) {
+			if (pathValidator.isUserPermissionInvalid(path, jwtTokenService.getRolesFrom(token))) {
 				throw new ForbiddenException("You don't have enough permissions to access this endpoint");	
 			}
 			populateRequestWithHeaders(exchange, token);

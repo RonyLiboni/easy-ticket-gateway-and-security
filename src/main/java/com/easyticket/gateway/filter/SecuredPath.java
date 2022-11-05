@@ -2,10 +2,14 @@ package com.easyticket.gateway.filter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
-public class SecuredRoute {
-	private String securedRoute;
+@Setter
+public class SecuredPath {
+	private String securedPath;
 	private String requiredRole;
 }
